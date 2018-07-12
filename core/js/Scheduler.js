@@ -3,6 +3,9 @@ var audioContext = new AudioContext();
 var nextNotetime = audioContext.currentTime;
 var beat = 1;
 var bar = 0;
+var timerID;
+var metronomeBtn = document.getElementById("metronome");
+
 
 function timeSig(beat, bar) {
   this.beat = beat;
@@ -16,7 +19,7 @@ function Scheduler() {
     nextNotetime += 0.5;
     playSound(nextNotetime, ts);
   }
-  window.setTimeout(Scheduler, 50.0);
+  timerID = window.setTimeout(Scheduler, 50.0);
 }
 
 function playSound(time, timeSig) {
@@ -33,4 +36,14 @@ function playSound(time, timeSig) {
   }
   osc.start(time);
   osc.stop(time + 0.1);
+};
+
+metronomeBtn.addEventListener('click', function() {
+
+  clearTimeout(timerID);
+
+}, false);
+
+if (audioContext.state === 'suspended') {
+  audioContext.resume();
 };
