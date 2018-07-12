@@ -1,0 +1,12 @@
+//webaudio functions
+
+//sets up and handles UI, Playback controller and MasterTracks
+function Controller() {
+  this.mt = new MasterTrack();
+  this.pb = new Playback();
+  this.ui = new UI();
+  this.scheduler = new Scheduler();
+}
+var controller = new Controller();
+controller.mt.tracks.push("stuff");
+console.log(controller.mt);
