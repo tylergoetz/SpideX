@@ -6,6 +6,7 @@ function Controller() {
   this.pb = new Playback();
   this.ui = new UI();
   this.scheduler = new Scheduler();
+  this.controls = new Controls();
 }
 var controller = new Controller();
 controller.mt.tracks.push("stuff");
