@@ -14,9 +14,9 @@ var nextNotetime = audioContext.currentTime;
 var beat = 1;
 var bar = 0;
 var timerID;
-var metronomeBtn = document.getElementById("metronome");
+var metronomeToggle = document.getElementById("metronomeToggle");
 
-//tests
+//tests/////////////////////
 var n = new Note(1000, new timeSig(1, 1), 65);
 var n6 = new Note(1000, new timeSig(1, 1), 67);
 var n2 = new Note(5000, new timeSig(1, 2), 63);
@@ -32,41 +32,61 @@ notes.push(n3);
 notes.push(n4);
 notes.push(n5);
 notes.push(n6);
-/////////
-
+////////////////////////////
 function timeSig(beat, bar) {
   this.beat = beat;
   this.bar = bar;
 }
 
 
-
 function Scheduler() {
-    while (nextNotetime < audioContext.currentTime + 0.1) {
-      nextNotetime += 0.5;        //can set tempo here i.e. 0.5seconds per quater note = 120bpm 
-      keepTime(nextNotetime, ts);
-      for(var i = 0; i < notes.length; i++){
-        let played = playNote(nextNotetime, notes[i], ts);
-        if(played){
-          notes.splice(i, 1);
-        }
-      }
-      /*
-      playSound(nextNotetime, ts);
-      playNote(nextNotetime, n, ts);
-      playNote(nextNotetime, n2, ts);
-      playNote(nextNotetime, n3, ts);
-      playNote(nextNotetime, n4, ts);
-      playNote(nextNotetime, n5, ts);
-      playNote(nextNotetime, n6, ts);
-      */
-    }
-    timerID = window.setTimeout(Scheduler, 5.0);
+  var self = this;
+  var bpm = 0.5;
+  console.log("Scheduler created!");
+  this.started = false;
+  this.stop = function(){
+    console.log("test" + timerID);
+    clearInterval(timerID);
+  }
+  this.setTempo = function(value){
+    bpm = (1/(value/60));
 
-  
+  }
+  this.start = function(){
+    timerID = window.setInterval(function(){
+      //console.log('in timeout');
+      while (nextNotetime < audioContext.currentTime + 0.1 && self.started) {
+        nextNotetime += bpm;        //can set tempo here i.e. 0.5seconds per quater note = 120bpm 
+        keepTime(nextNotetime, ts);
+        for(var i = 0; i < notes.length; i++){
+          let played = playNote(nextNotetime, notes[i], ts);
+          if(played){
+            notes.splice(i, 1);
+          }
+        }
+        playSound(nextNotetime, ts);
+      }
+    }, 50.0);
+    
+  }
+  metronomeToggle.addEventListener('click', function() {
+    if(self.started){
+      self.started = false;
+      self.stop();
+    }
+    else if(!self.started){
+      self.started = true;
+      self.start();
+      
+    }
+    console.log("Scheduler " && self.started === false ? "Stopped" : "Started");
+  }, false);
 }
+
+
 function keepTime(time, timeSig){
   //console.log(timeSig.beat + '/' + timeSig.bar);
+  document.getElementById("metroDisplay").innerText = timeSig.beat + '/' + timeSig.bar;
   if (timeSig.beat < 4) {
     timeSig.beat++;
   } else {
@@ -77,7 +97,6 @@ function keepTime(time, timeSig){
 
 
 function playSound(time, timeSig) {
-  
   let osc = audioContext.createOscillator();
   let gainNode = audioContext.createGain();
   gainNode.gain.value = 0.5;
@@ -85,12 +104,10 @@ function playSound(time, timeSig) {
   gainNode.connect(compressor);
   if (timeSig.beat < 4) {
     osc.frequency.value = 200;
-    timeSig.beat++;
+    
   } else {
     osc.frequency.value = 400;
-    timeSig.beat = 1;
-    timeSig.bar++;
-
+    
   }
   osc.start(time);
   osc.stop(time + 0.1);
@@ -104,7 +121,6 @@ function playNote(time, Note, timeSig) {
   gainNode.connect(compressor);
   gainNode.gain.value = 0.2;
   if (timeSig.bar === Note.placement.bar && timeSig.beat === Note.placement.beat) {
-    controller.ui.draw("visualizer", new Coord(0, 0, 50, 25), Note);
     console.log(Note.value + " played! for " + Note.length);
     osc.frequency.value = Note.value;
     osc.start(time);
@@ -115,9 +131,7 @@ function playNote(time, Note, timeSig) {
   } return notePlayed;
 };
 
-metronomeBtn.addEventListener('click', function() {
-  clearTimeout(timerID);
-}, false);
+
 
 if (audioContext.state === 'suspended') {
   audioContext.resume();

@@ -1,8 +1,12 @@
 function Track(){
     this.notes = [];
     //some sort of canvas to keep track of notes?
-    function play(){
+    this.play = function(){
+        if(!playing){
+            playTrack();
+        }
+    }
+    this.playTrack = function(){
         
     }
-    
 }

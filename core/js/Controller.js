@@ -8,6 +8,7 @@ function Controller() {
   this.scheduler = new Scheduler();
   this.controls = new Controls();
 }
-var controller = new Controller();
-controller.mt.tracks.push("stuff");
-console.log(controller.mt);
+ var controller = new Controller();
+// controller.mt.tracks.push("stuff");
+ controller.scheduler.start();
+// console.log(controller.mt);

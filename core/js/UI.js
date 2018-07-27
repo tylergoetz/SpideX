@@ -1,8 +1,14 @@
 function UI() {
   console.log("UI created!" );
   this.cv = document.getElementById("visualizer");
-  
-  
+  document.getElementById("tempo")
+    .addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+        controller.scheduler.setTempo(document.getElementById("tempo").value)
+    }
+  });
+}
   
   /*
   this.draw = function(canvasId, coord, note){
@@ -15,7 +21,6 @@ function UI() {
     }
   }
   */
-}
 
 
 /*
