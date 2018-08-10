@@ -6,26 +6,42 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
   <title>SpideX DAW</title>
+  <link rel="stylesheet" type="text/css" href="css/body.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Do+Hyeon" rel="stylesheet">
+
 </head>
 <body>
-    <div id="metronome">
-      <button id="metronomeToggle">Metronome toggle</button>
-      <input id="tempo" value="120" ></input>
-      <span id="metroDisplay" ></span>
+    <div >
+        <image src='spidex logo.png' width ='130' height='130' style='display:inline' alt='spidex logo'></image>
+        <image id='name' src='Sx.png' width ='130' height='130' style='display:inline'alt='Thanks for Using Spidex!'></image>
+      </div>
+    <div id="metronome" class='col-container'>
+      <button class='col'id="metronomeToggle" alt='metronome toggle'>&#9750;<span class='col'  id="metroDisplay" ></span></button>
+      <button class='col'id="play" alt='play/pause'>&#9658;</button>
+      <input class='col' id="tempo" value="120" alt='set tempo here'></input>
+      
+      
     </div>
+    <p id='infoDisplay'>TESTTSETESTSETSET</p>
     <div>
-      <canvas id="visualizer" width ="200" height="200" style = "border:1px solid #000000;"></canvas>
+      <canvas id="visualizer" class='timeline'width ="1000" height="24" style = "border:1px solid; left:100px;position:relative" alt='Timeline'></canvas>
     </div>
     <script src="js/Rgb.js"></script>
-    <script src="js/UI.js"></script>
+    
     <script src="js/Note.js"></script>
     <script src="js/Track.js"></script>
+    
     <script src="js/Mastertrack.js"></script>
+    <script src="js/UI.js"></script>
     <script src="js/Playback.js"></script>
     <script src="js/Scheduler.js"></script>
     <script src="js/Controls.js"></script>
     <script src="js/Controller.js"></script>
+
+    
 
 </body>
 </html>

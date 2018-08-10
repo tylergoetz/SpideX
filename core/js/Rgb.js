@@ -8,5 +8,8 @@ function Randomrgb(note){
     rgb[0] = r;
     rgb[1] = b;
     rgb[2] = g
+    console.log("rbg gen: " + rgb);
+    
     return rgb;
 }
+

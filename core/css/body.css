@@ -1,0 +1,49 @@
+img{
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+#metronome{
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+body{
+    color:white;
+    background-color:#323232;
+    font-family: 'Do Hyeon', sans-serif !important;
+}
+canvas{
+    background-color:#727272;
+    border:none !important;
+}
+button{
+    border:none;
+    color:white;
+    text-align:center;
+    text-decoration:none;
+    width:10%;
+    font-size:16px;
+    background-color: #4CAF50;
+    font-family: 'Do Hyeon', sans-serif !important;
+
+}
+button:hover{
+    background-color: #555555;
+}
+.col-container{
+    display:inline-flex;
+    width:100%;
+}
+.col{
+    flex: 1;
+    
+}
+#name{
+    left:-4%;
+    position:relative;
+}
