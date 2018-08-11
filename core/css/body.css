@@ -41,7 +41,7 @@ button:hover{
 }
 .col{
     flex: 1;
-    
+    text-align: -webkit-center;
 }
 #name{
     left:-4%;
