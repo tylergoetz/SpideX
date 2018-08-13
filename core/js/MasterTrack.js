@@ -8,5 +8,7 @@ function MasterTrack() {
   let tt = new Track();
   tt.create(2);
   this.tracks.push(tt);
-  
+  let t2 = new Track();
+  t2.create(2);
+  this.tracks.push(t2);
 }

@@ -16,24 +16,24 @@ var timerID;
 var metronomeToggle = document.getElementById("metronomeToggle");
 
 //tests/////////////////////
-var n = new Note(1000, new timeSig(2, 1), 65);
-var n6 = new Note(1000, new timeSig(2, 1), 67);
-var n2 = new Note(5000, new timeSig(1, 3), 63);
-var n3 = new Note(6000, new timeSig(2, 4), 60);
-var n4 = new Note(2500, new timeSig(3, 1), 58);
-var n5 = new Note(1500, new timeSig(1, 2), 65);
-var n6 = new Note(1500, new timeSig(3, 4), 45);
+// var n = new Note(1000, new timeSig(2, 1), 65);
+// var n6 = new Note(1000, new timeSig(2, 1), 67);
+// var n2 = new Note(5000, new timeSig(1, 3), 63);
+// var n3 = new Note(6000, new timeSig(2, 4), 60);
+// var n4 = new Note(2500, new timeSig(3, 1), 58);
+// var n5 = new Note(1500, new timeSig(1, 2), 65);
+// var n6 = new Note(1500, new timeSig(3, 4), 45);
 var ts = new timeSig(beat, bar);
 
 var notes = [];
-notes.push(n);
-notes.push(n2);
-notes.push(n3);
-notes.push(n4);
-notes.push(n5);
-notes.push(n6);
+// notes.push(n);
+// notes.push(n2);
+// notes.push(n3);
+// notes.push(n4);
+// notes.push(n5);
+// notes.push(n6);
 
-////////////////////////////
+////////GLOBAL BEAT BAR /////
 function timeSig(beat, bar) {
   this.beat = beat;
   this.bar = bar;
@@ -59,8 +59,10 @@ function Scheduler() {
         keepTime(nextNotetime, ts);
         controller.ui.tick();
         for(var i = 0; i < notes.length; i++){
+          
           let played = playNote(nextNotetime, notes[i], ts);
           if(played){
+            console.log('FROM SCHEDULER' + notes[i].placement.bar + ':' + notes[i].placement.beat);
             controller.ui.draw("visualizer", notes[i]);
             notes.splice(i, 1);
           }
@@ -120,7 +122,9 @@ function playNote(time, Note, timeSig) {
   osc.connect(gainNode);
   gainNode.connect(compressor);
   gainNode.gain.value = 0.2;
+  //console.log('note played!' + Note.placement.bar + ':' + Note.placement.beat);
   if (timeSig.bar === Note.placement.bar && timeSig.beat === Note.placement.beat) {
+    //console.log('note played!' + Note.placement.bar + ':' + Note.placement.beat);
     osc.frequency.value = Note.value;
     osc.start(time);
     gainNode.gain.setTargetAtTime(0, time + Note.length, 0.25);

@@ -4,8 +4,9 @@ var ctx = canvas.getContext("2d");
 ctx.strokeStyle="#FF0000";
 var coordinate;
 var timelineOffset = 100;
-var timelineSpacing = 25;
-
+var grid = 30;
+var length = 20;
+var height = 24;
 
 
 function UI() {
@@ -18,28 +19,40 @@ function UI() {
     }
   });
   this.drawTimeline = function(){
-    let img = new Image();
-    img.src = "Timeline.png";
-    img.addEventListener('load', function(){
-      //ctx.drawImage(img, 0,-75);
-      ctx.fillText("Hello World",10,50);
-    }, false);
-    console.log(canvas);
+    // let img = new Image();
+    // img.src = "Timeline.png";
+    // img.addEventListener('load', function(){
+    //   //ctx.drawImage(img, 0,-75);
+    //   ctx.fillText("Hello World",10,50);
+    // }, false);
+    let c = 1;
+    let d = 1;
+    let x = 0;
+    while(x < canvas.getBoundingClientRect().right){
+      ctx.fillText(d + "." + c, x, 10, 500)
+      x+=grid;
+      c+=1;
+      if(c > 4){
+        c = 1;
+        d +=1;
+      }
+    }
+    //draw position in timeline and subsequent tracks
     canvas.addEventListener('click',function(){
       var mouseX = event.clientX;
       var mouseY = event.clientY;
-      console.log("timeline clicked: "+  mouseX +':' + mouseY);
-      console.log("click rounded: "+  roundNum(mouseX, timelineSpacing) +':' + mouseY);
+      // console.log("timeline clicked: "+  mouseX +':' + mouseY);
+      // console.log("click rounded: "+  roundNum(mouseX, gridg) +':' + mouseY);
       ctx.beginPath();
-      ctx.moveTo(roundNum(mouseX, timelineSpacing)-timelineOffset, 0);
-      ctx.lineTo(roundNum(mouseX, timelineSpacing)-timelineOffset,50);
+      ctx.moveTo(roundNum(mouseX, grid)-timelineOffset, 0);
+      ctx.lineTo(roundNum(mouseX, grid)-timelineOffset,50);
       ctx.stroke();
       let track = controller.mt.tracks[0];
       let trackCtx = track.cv.ctx;
       trackCtx.strokeStyle = "#FF0000";
       trackCtx.beginPath();
-      trackCtx.moveTo(roundNum(mouseX, timelineSpacing), 0);
-      trackCtx.lineTo(roundNum(mouseX, timelineSpacing), track.height*track.grid);
+      trackCtx.moveTo(roundNum(mouseX, grid), 0);
+      trackCtx.lineTo(roundNum(mouseX, grid), track.height*track.grid);
       trackCtx.stroke();
     }, false);
   }
@@ -57,21 +70,26 @@ function UI() {
     }
     else{
       if(n.placement.bar > 1){
-        coordinate = new Coord(timelineSpacing*4*(n.placement.bar-1)+(n.placement.beat*timelineSpacing),20, 10,100);
+        coordinate = new Coord(grid*4*(n.placement.bar-1)+(n.placement.beat*grid),20, 10,100);
       }
       else{
-        coordinate = new Coord(n.placement.beat*timelineSpacing, 20, 10,100);
+        coordinate = new Coord((n.placement.beat)*grid, 20, 10,100);
       }
       draw2("visualizer", coordinate, n);
     }
   }
   //display info in the infobar kind of like fl studio
+  //possible performance issues
   document.body.addEventListener('mouseover', function(event){
     let target = $(event.target);
     let elId = target.attr('alt');
+    let el = document.getElementById('infoDisplay');
     if(elId){
-      let el = document.getElementById('infoDisplay');
+      
       el.innerHTML = elId;
+    }
+    else{
+      el.innerHTML = "---";
     }
   },false);
 }
@@ -87,7 +105,7 @@ function draw2(canvasId, coord, note){
   //ctx.fillstyle = "rgb('+ Randomrgb(note)+')";
   
   if(!found){   //doesnt find a matching element
-    ctx.strokeRect(coord.x1, coord.y1, coord.x2, coord.y2);
+    ctx.strokeRect(coord.x1-10, coord.y1, coord.x2-10, coord.y2);
     coords.push(coord);  
   }
   else{ //does find matching element, adjust drawing position

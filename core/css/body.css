@@ -1,3 +1,13 @@
+:root{
+    --primary-color : #9ccc65;
+    --primary-color-light: #cfff95;
+    --pimary-color-dark: #6b9b37;
+
+    --secondary-color: #5c6bc0;
+    --secondary-color-light: #8e99f3;
+    --secondary-color-dark: #26418f;
+}
+
 img{
     user-select: none;
     -moz-user-select: none;
@@ -14,12 +24,20 @@ img{
 }
 body{
     color:white;
-    background-color:#323232;
+    background-color: var(--secondary-color);
     font-family: 'Do Hyeon', sans-serif !important;
+    border : 0px;
+    padding: 0px;
+    margin: 0px;
 }
 canvas{
-    background-color:#727272;
+    background-color:white;
     border:none !important;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }
 button{
     border:none;
@@ -28,12 +46,12 @@ button{
     text-decoration:none;
     width:10%;
     font-size:16px;
-    background-color: #4CAF50;
+    background-color: var(--secondary-color-light);
     font-family: 'Do Hyeon', sans-serif !important;
 
 }
 button:hover{
-    background-color: #555555;
+    background-color: var(--secondary-color-dark);
 }
 .col-container{
     display:inline-flex;
@@ -46,4 +64,12 @@ button:hover{
 #name{
     left:-4%;
     position:relative;
+}
+#logo{
+    background-color: var(--secondary-color-dark);
+}
+#infoDisplay{
+    background-color: var(--secondary-color-dark);
+    padding: 5px;
+    margin: 0px;
 }
