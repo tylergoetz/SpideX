@@ -3,9 +3,11 @@
     --primary-color-light: #cfff95;
     --pimary-color-dark: #6b9b37;
 
-    --secondary-color: #5c6bc0;
-    --secondary-color-light: #8e99f3;
-    --secondary-color-dark: #26418f;
+    --secondary-color: #111;;
+    --secondary-color-light: #444;
+    --secondary-color-dark: #111;
+
+    
 }
 
 img{
@@ -31,27 +33,14 @@ body{
     margin: 0px;
 }
 canvas{
-    background-color:white;
+    background-color:var(--secondary-color-light);
+    color: white;
     border:none !important;
     user-select: none;
     -moz-user-select: none;
     -webkit-user-drag: none;
     -webkit-user-select: none;
     -ms-user-select: none;
-}
-button{
-    border:none;
-    color:white;
-    text-align:center;
-    text-decoration:none;
-    width:10%;
-    font-size:16px;
-    background-color: var(--secondary-color-light);
-    font-family: 'Do Hyeon', sans-serif !important;
-
-}
-button:hover{
-    background-color: var(--secondary-color-dark);
 }
 .col-container{
     display:inline-flex;
@@ -60,16 +49,89 @@ button:hover{
 .col{
     flex: 1;
     text-align: -webkit-center;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    overflow: hidden;
+    background-color: #333;
+    border: 0px;
+}
+.col:hover{
+    background-color: red;
 }
 #name{
     left:-4%;
     position:relative;
 }
 #logo{
-    background-color: var(--secondary-color-dark);
+    background-color: var(--secondary-color);
 }
 #infoDisplay{
     background-color: var(--secondary-color-dark);
     padding: 5px;
     margin: 0px;
+}
+
+
+/*W3schools css navbar and styling*/
+.navbar {
+    overflow: hidden;
+    background-color: #333;
+}
+
+.navbar a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+
+.dropdown .dropbtn {
+    cursor: pointer;
+    font-size: 16px;    
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn, .dropbtn:focus {
+    background-color: red;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.show {
+    display: block;
 }

@@ -18,13 +18,8 @@ function UI() {
         controller.scheduler.setTempo(document.getElementById("tempo").value)
     }
   });
+  
   this.drawTimeline = function(){
-    // let img = new Image();
-    // img.src = "Timeline.png";
-    // img.addEventListener('load', function(){
-    //   //ctx.drawImage(img, 0,-75);
-    //   ctx.fillText("Hello World",10,50);
-    // }, false);
     let c = 1;
     let d = 1;
     let x = 0;
@@ -39,24 +34,26 @@ function UI() {
     }
     //draw position in timeline and subsequent tracks
     canvas.addEventListener('click',function(){
-      var mouseX = event.clientX;
-      var mouseY = event.clientY;
-      // console.log("timeline clicked: "+  mouseX +':' + mouseY);
-      // console.log("click rounded: "+  roundNum(mouseX, gridg) +':' + mouseY);
+      var mouseX = event.pageX;
+      var mouseY = event.pageY;
       ctx.beginPath();
       ctx.moveTo(roundNum(mouseX, grid)-timelineOffset, 0);
       ctx.lineTo(roundNum(mouseX, grid)-timelineOffset,50);
       ctx.stroke();
-      let track = controller.mt.tracks[0];
-      let trackCtx = track.cv.ctx;
-      trackCtx.strokeStyle = "#FF0000";
-      trackCtx.beginPath();
-      trackCtx.moveTo(roundNum(mouseX, grid), 0);
-      trackCtx.lineTo(roundNum(mouseX, grid), track.height*track.grid);
-      trackCtx.stroke();
+      for(let i = 0; i < controller.mt.tracks.length; i++){
+        let track = controller.mt.tracks[i];
+        let trackCtx = track.cv.ctx;
+        trackCtx.strokeStyle = "#FF0000";
+        trackCtx.beginPath();
+        trackCtx.moveTo(roundNum(mouseX, grid), 0);
+        trackCtx.lineTo(roundNum(mouseX, grid), track.height*track.grid);
+        trackCtx.stroke();
+      }
+      
     }, false);
   }
-
+  this.drawTimeline();  //either i'm stupid or JS is but this seemed like the only way handle constructor calls (maybe es6 class constructors?)
+  
   //helps with drawing functions 
   let t = 0; 
   this.tick = function(){
@@ -85,7 +82,6 @@ function UI() {
     let elId = target.attr('alt');
     let el = document.getElementById('infoDisplay');
     if(elId){
-      
       el.innerHTML = elId;
     }
     else{
@@ -121,7 +117,7 @@ function draw2(canvasId, coord, note){
     coords.push(coord);  
   }
 }
-
+//class coordinate, helps maintain easy viewability of clickable sections in the canvas, specifically notes the user creates
 function Coord(x1, y1, x2, y2){
   this.x1 = x1;
   this.x2 = x2;
@@ -145,3 +141,31 @@ function createArray(length) {
   }
   return arr;
 }
+
+//https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_dropdown_navbar_click
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function dropDown() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+function dropFileDown() {
+  document.getElementById("fileDropdown").classList.toggle("show");
+}
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(e) {
+if (!e.target.matches('.dropbtn')) {
+  var myDropdown = document.getElementById("myDropdown");
+    if (myDropdown.classList.contains('show')) {
+      myDropdown.classList.remove('show');
+    }
+}
+if (!e.target.matches('.dropbtn')) {
+  var myDropdown = document.getElementById("fileDropdown");
+    if (myDropdown.classList.contains('show')) {
+      myDropdown.classList.remove('show');
+    }
+}
+}
+
+
+

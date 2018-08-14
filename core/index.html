@@ -18,11 +18,35 @@
         <image src='spidex logo.png' width ='130' height='130' style='display:inline' alt='spidex logo'></image>
         <image id='name' src='Sx.png' width ='130' height='130' style='display:inline'alt='thanks for using Spidex!'></image>
     </div>
-    <div id="metronome" class='col-container'>
-      <button class='col'id="metronomeToggle" alt='metronome toggle'>&#9750;<span class='col'  id="metroDisplay" ></span></button>
-      <button class='col'id="play" alt='play/pause'>&#9658;</button>
-      <input class='col' id="tempo" value="120" alt='set tempo here'></input>
+    <div class="navbar">
+      <div class="dropdown">
+        <button class="dropbtn" onclick="dropFileDown()">File
+          <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content" id="fileDropdown">
+          <a href="#" onclick= ''>render audio</a>
+          <a href="#" onclick =''>save track</a>
+        </div>
+      </div> 
+      <div class="dropdown">
+        <button class="dropbtn" onclick="dropDown()">Track
+          <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content" id="myDropdown">
+          <a href="#" onclick= ''>audio track</a>
+          <a href="#" onclick ='controller.mt.newTrack()'>virtual inst track</a>
+        </div>
+      </div> 
     </div>
+    <div style='height:5px;'></div>
+    <div id="controls" class='col-container'>
+      <span class='col'id="metronomeToggle" alt='metronome toggle'>&#9750;<span class='col'  id="metroDisplay" ></span></span>
+      <button class='col'id="play" alt='play/pause'>&#9658;</button>
+      <button class='col' id='restart' alt='back to beginning of track' onclick='restartPlayback()'> 	&#9724;</button>
+      <input class='col' id="tempo" value="120" alt='set tempo here'></input>
+
+    </div>
+    
     <p id='infoDisplay'>I'm FREE!</p>
     <div>
       <canvas id="visualizer" class='timeline'width ="1000" height="24" style = "border:1px solid; left:100px;position:relative" alt='timeline'></canvas>
@@ -38,8 +62,5 @@
     <script src="js/Scheduler.js"></script>
     <script src="js/Controls.js"></script>
     <script src="js/Controller.js"></script>
-
-    
-
 </body>
 </html>

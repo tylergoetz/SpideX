@@ -1,0 +1,9 @@
+8/14/18
+-key number by note insertion
+-fixed drawnote in timeline (no longer relies on lookahead)
+-added navbar (w3 implementation) and a few options
+    --File 
+    --Track
+        ---audio (not working yet) or vst track
+-fixed note position issues (added constraints and proper position based on pageX, pageY)
+-

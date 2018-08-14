@@ -13,45 +13,37 @@ var nextNotetime = audioCtx.currentTime;
 var beat = 1;
 var bar = 1;
 var timerID;
-var metronomeToggle = document.getElementById("metronomeToggle");
+var metronomeToggle = document.getElementById("play");
 
-//tests/////////////////////
-// var n = new Note(1000, new timeSig(2, 1), 65);
-// var n6 = new Note(1000, new timeSig(2, 1), 67);
-// var n2 = new Note(5000, new timeSig(1, 3), 63);
-// var n3 = new Note(6000, new timeSig(2, 4), 60);
-// var n4 = new Note(2500, new timeSig(3, 1), 58);
-// var n5 = new Note(1500, new timeSig(1, 2), 65);
-// var n6 = new Note(1500, new timeSig(3, 4), 45);
-var ts = new timeSig(beat, bar);
+var ts = new timeSig(beat, bar);    //global timesig 
+var notes = [];                     //global notes, any notes pushed to here will be scheduled for playback!
 
-var notes = [];
-// notes.push(n);
-// notes.push(n2);
-// notes.push(n3);
-// notes.push(n4);
-// notes.push(n5);
-// notes.push(n6);
-
-////////GLOBAL BEAT BAR /////
+////////class time signature  /////
 function timeSig(beat, bar) {
   this.beat = beat;
   this.bar = bar;
 }
-
+/////////////////////////////////
 
 function Scheduler() {
   let self = this;
-  let bpm = 0.5;
+  let bpm = 0.5;  //global bpm, always set through Scheduler.setTempo(value) to ensue correct timing
   console.log("Scheduler created");
   this.started = false;
+  //stop audio context clear's interval for lookahead function
   this.stop = function(){
+    self.started = false;
+    audioCtx.suspend();
     window.clearInterval(timerID);
   }
+  //allow dynamic tempo changes (not sure how to handle audio clips)
   this.setTempo = function(value){
     bpm = (1/(value/60));
   }
+  //resumes audioContext, lookahead function, keepstime for metronome display
   this.start = function(){
+    self.started = true;
+    audioCtx.resume();
     timerID = window.setInterval(function(){
       while (nextNotetime < (audioCtx.currentTime + 0.1) && self.started) {
         //can set tempo here i.e. 0.5seconds per quater note = 120bpm 
@@ -62,24 +54,22 @@ function Scheduler() {
           
           let played = playNote(nextNotetime, notes[i], ts);
           if(played){
-            console.log('FROM SCHEDULER' + notes[i].placement.bar + ':' + notes[i].placement.beat);
             controller.ui.draw("visualizer", notes[i]);
-            notes.splice(i, 1);
+            //notes.splice(i, 1); if we splice notes then we cant playback from beginning 
           }
         }
         playSound(nextNotetime, ts);
       }
     }, 50.0);
   }
+  //event listener for play/pause through metronome toggle
   metronomeToggle.addEventListener('click', function() {
     if(self.started){
-      self.started = false;
-      audioCtx.suspend();
+      
       self.stop();
     }
     else if(!self.started){
-      self.started = true;
-      audioCtx.resume();
+      
       self.start();
     }
     console.log("Scheduler " && self.started === false ? "Stopped" : "Started");
@@ -115,6 +105,7 @@ function playSound(time, timeSig) {
   osc.stop(time + 0.1);
 };
 
+//creates oscillator for scheduled note and play it, handles Note class only 
 function playNote(time, Note, timeSig) {
   let notePlayed = false;
   let osc = audioCtx.createOscillator();
@@ -122,9 +113,7 @@ function playNote(time, Note, timeSig) {
   osc.connect(gainNode);
   gainNode.connect(compressor);
   gainNode.gain.value = 0.2;
-  //console.log('note played!' + Note.placement.bar + ':' + Note.placement.beat);
   if (timeSig.bar === Note.placement.bar && timeSig.beat === Note.placement.beat) {
-    //console.log('note played!' + Note.placement.bar + ':' + Note.placement.beat);
     osc.frequency.value = Note.value;
     osc.start(time);
     gainNode.gain.setTargetAtTime(0, time + Note.length, 0.25);
@@ -133,3 +122,8 @@ function playNote(time, Note, timeSig) {
   } 
   return notePlayed;
 };
+
+function restartPlayback(){
+  ts.beat = 1;
+  ts.bar = 1;
+}

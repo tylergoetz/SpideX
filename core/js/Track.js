@@ -29,6 +29,7 @@ class Track{
         this.cv.ctx = this.cv.getContext('2d');
         this.cv.ctx.font = '18px Do Hyeon';
         document.body.appendChild(this.cv);
+        this.cv.left = 100;
         if(type === 1){ //audio track
             //smart kid stuff here
         }
@@ -64,37 +65,61 @@ class Track{
             this.cv.ctx.moveTo(100,0);
             this.cv.ctx.lineTo(100,self.grid*l*2);
             this.cv.ctx.stroke();
-            //iterate through adding event listener for presses and assigning correct timing, length, etc...
+            //iterate through adding event lis tener for presses and assigning correct timing, length, etc...
             //  store coordinates of new note for further manipulation i.e. deletion, changing length or note, dragging :'(
-            
             this.cv.addEventListener('click', function(event){
                 let mx, my;
-                console.log('check' +roundNum(event.clientX, grid) + ":" +roundNum(event.clientY, grid));
-                mx = roundNum(event.clientX, grid) - rect.left; //right now tracks are stuck at 0 left offset
-                my = roundNum(event.clientY,grid) - rect.top-10; //y position - boundingRec top offsest - 10 (for getting into the middle of the note)
+                mx = event.pageX;
+                my = event.pageY;
+                if(mx < 120){
+                    mx = 120;
+                }
+                if(my < 15){
+                    my = 15;
+                }
+                console.log('check' +roundNum(event.pageX, grid) + ":" +roundNum(event.pageY, grid));
+                //no left associative assignemnt operator calls BURN IN HELL JS
+                mx = mx - rect.left;
+                mx = roundNum(mx, grid); //right now tracks are stuck at 0 left offset
+                my = my -rect.top - 10;
+                my = roundNum(my,grid) + 15;//y position - boundingRec top offsest - 10 (for getting into the middle of the note)
+                //set bounds for drawing window
+                if(mx < 120){
+                    mx = 120;
+                }
+                if(my < 15){
+                    my = 15;
+                }
                 console.log('check offset:' +mx + ":" +my);
                 //draw note (circle for now)
                 self.cv.ctx.beginPath();
                 self.cv.ctx.arc(mx,my,5,0,2*Math.PI);
-                self.cv.ctx.strokeStyle = 'blue';
-                self.cv.ctx.stroke();
-                let sub = 90;
+                self.cv.ctx.fillStyle = 'green';
+                self.cv.ctx.fill();
+                //calculate note placement from mx
+                let sub = 120;       //adjustments for now
                 let noteX = mx - sub;
-                let noteLength = 500; //ms
+                let noteLength = 500; //ms, change later 
                 let noteBar = 1;
-                let noteBeat = noteX/grid;
-                if(noteBeat > 4){
-                    noteBar += Math.floor(noteBeat/4);
-                    noteBeat = noteBeat % 4 + 1;
-                    if(noteBeat === 0){
-                        noteBeat+=1;
+                let noteBeat = noteX/grid + 1;
+                console.log('notebeat before calc' + noteBeat)
+                if(noteBeat >= 5){
+                    noteBar = Math.floor(noteBeat/4);
+                    if(noteBeat%4 === 0){
+                        noteBeat = 4;
+                    }
+                    else{
+                        noteBeat = noteBeat % 4;
                     }
                 }
                 let noteTS = new timeSig(noteBeat, noteBar);
-                let note = new Note(noteLength, noteTS, 50);
+
+                //calulate note number from my and canvas offset.top // +-30 so grid
+                let noteNumber = (my - 15)/30;
+                noteNumber = 60-noteNumber;
+                let note = new Note(noteLength, noteTS, noteNumber);
                 notes.push(note);
-                console.log(note);
-                console.log(noteBeat + " : " + noteBar) ;
+                console.log('beat: ' +noteBeat + " | bar: " + noteBar) ;
             },false);
         }
         

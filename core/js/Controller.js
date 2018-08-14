@@ -1,21 +1,20 @@
 //webaudio functions
 
-//sets up and handles UI, Playback, and MasterTracks
+//sets up and handles everything (a master)
 function Controller() {
+  let self = this;
+  let playing = false;
   this.mt = new MasterTrack();
   this.pb = new Playback();
   this.ui = new UI();
+  //controller.ui.drawTimeline();
   this.scheduler = new Scheduler();
+  //scheduler helper functions 
+  this.play = function(){self.scheduler.start();}
+  this.pause = function(){self.scheduler.stop();}
+
   this.controls = new Controls();
 }
- var controller = new Controller();
-// controller.mt.tracks.push("stuff");
- controller.ui.drawTimeline();
-// console.log(controller.mt);
-//dynamic event allocation, cuz im lazy :'( ( 0 ) ) <----me eating doughnut
+var controller = new Controller();
 
-/*
-$('.wk').on('click', function(){
-  console.log("clicked" + this.key);
-});
-*/
+

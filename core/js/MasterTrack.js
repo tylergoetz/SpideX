@@ -5,10 +5,9 @@ function MasterTrack() {
   this.volume = 0; //value between 0 and 1
   this.fx = []; //allow effects to be saved as objects in an array 
   //should be calling tracks to then play notes so this.tracks.play()
-  let tt = new Track();
-  tt.create(2);
-  this.tracks.push(tt);
-  let t2 = new Track();
-  t2.create(2);
-  this.tracks.push(t2);
+  this.newTrack = function(){
+    let t = new Track();
+    t.create(2);
+    this.tracks.push(t);
+  }
 }
