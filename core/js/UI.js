@@ -11,8 +11,7 @@ var height = 24;
 
 function UI() {
   console.log("UI created!" );
-  document.getElementById("tempo")
-    .addEventListener("keyup", function(event) {
+  document.getElementById("tempo").addEventListener("keyup", function(event) {
     event.preventDefault();
     if (event.keyCode === 13) {
         controller.scheduler.setTempo(document.getElementById("tempo").value)
@@ -20,6 +19,8 @@ function UI() {
   });
   
   this.drawTimeline = function(){
+    canvas.style.left = grid*3 +'px'; //set timeline position
+    
     let c = 1;
     let d = 1;
     let x = 0;
@@ -34,21 +35,21 @@ function UI() {
     }
     //draw position in timeline and subsequent tracks
     canvas.addEventListener('click',function(){
-      var mouseX = event.pageX;
-      var mouseY = event.pageY;
+      let mx = roundNum(event.pageX, grid);
       ctx.beginPath();
-      ctx.moveTo(roundNum(mouseX, grid)-timelineOffset, 0);
-      ctx.lineTo(roundNum(mouseX, grid)-timelineOffset,50);
+      ctx.moveTo(mx-timelineOffset, 0);
+      ctx.lineTo(mx-timelineOffset,50);
       ctx.stroke();
       for(let i = 0; i < controller.mt.tracks.length; i++){
         let track = controller.mt.tracks[i];
         let trackCtx = track.cv.ctx;
         trackCtx.strokeStyle = "#FF0000";
         trackCtx.beginPath();
-        trackCtx.moveTo(roundNum(mouseX, grid), 0);
-        trackCtx.lineTo(roundNum(mouseX, grid), track.height*track.grid);
+        trackCtx.moveTo(mx, 0);
+        trackCtx.lineTo(mx, track.height*track.grid);
         trackCtx.stroke();
       }
+      //set ts to timeline position
       
     }, false);
   }
@@ -76,18 +77,19 @@ function UI() {
     }
   }
   //display info in the infobar kind of like fl studio
-  //possible performance issues
-  document.body.addEventListener('mouseover', function(event){
-    let target = $(event.target);
-    let elId = target.attr('alt');
-    let el = document.getElementById('infoDisplay');
-    if(elId){
-      el.innerHTML = elId;
-    }
-    else{
-      el.innerHTML = "---";
-    }
-  },false);
+  //PERFORMANCE ISSUES FIND WORKAROUND  
+
+  // document.body.addEventListener('mouseover', function(event){
+  //   let target = $(event.target);
+  //   let elId = target.attr('alt');
+  //   let el = document.getElementById('infoDisplay');
+  //   if(elId){
+  //     el.innerHTML = elId;
+  //   }
+  //   else{
+  //     el.innerHTML = "---";
+  //   }
+  // },false);
 }
 
 //rounds a number up or down depending on where it sits between the interval

@@ -7,7 +7,7 @@ class Track{
         this.grid = 30;
         this.cv;
         this.notes = ['c', 'c#','d','d#','e','f','f#','g','g#','a','a#','b'];
-        this.length = 20;
+        this.length = 100;
         this.height = 12;
     }
     //Might not be necessary in since tracks arent responsible for playback
@@ -21,7 +21,7 @@ class Track{
         let l = this.length;
         let h = this.height;
         this.cv = document.createElement('canvas');
-        this.cv.width = l*grid+(grid*2)
+        this.cv.width = l*grid
         this.cv.height = h*grid;
         let alt = document.createAttribute("alt");
         alt.value = 'piano roll';
@@ -52,64 +52,67 @@ class Track{
                 this.keys.push(key);
                 //key.onload = function(){    //originally an image for keys 
                     //self.cv.ctx.drawImage(key, 0, self.grid*i);
-                    self.cv.ctx.fillStyle = col;
-                    self.cv.ctx.fillRect(0, grid*i, l*5, grid);
-                    self.cv.ctx.fillStyle = 'gray';
-                    self.cv.ctx.fillText(self.notes[i], 2, grid*i+15, 50);
-                    self.cv.ctx.strokeStyle = 'red';
-                    self.cv.ctx.strokeRect(0, grid*i, l*5, grid);
+                self.cv.ctx.fillStyle = col;
+                self.cv.ctx.fillRect(0, grid*i, grid*3, grid);
+                self.cv.ctx.fillStyle = 'gray';
+                self.cv.ctx.fillText(self.notes[i], 2, grid*i+15, 50);
+                self.cv.ctx.strokeStyle = 'black';
+                self.cv.ctx.strokeRect(0, grid*i, l*50, grid);
                 //}
             }
             //draw divider line between keys and roll
             this.cv.ctx.beginPath();
-            this.cv.ctx.moveTo(100,0);
-            this.cv.ctx.lineTo(100,self.grid*l*2);
+            this.cv.ctx.moveTo(grid*3,0);
+            this.cv.ctx.lineTo(grid*3,self.grid*l*2);
             this.cv.ctx.stroke();
             //iterate through adding event lis tener for presses and assigning correct timing, length, etc...
             //  store coordinates of new note for further manipulation i.e. deletion, changing length or note, dragging :'(
             this.cv.addEventListener('click', function(event){
-                let mx, my;
+                let mx, my, boundX, boundY;
+                boundX = 120;   //X-bounds to keep notes in piano roll
+                boundY = 15;    //Y-bounds to keep notes in piano roll, aligned with note
                 mx = event.pageX;
                 my = event.pageY;
-                if(mx < 120){
-                    mx = 120;
-                }
-                if(my < 15){
-                    my = 15;
-                }
+                // if(mx < boundX){
+                //     mx = boundX;
+                // }
+                // if(my < boundY){
+                //     my = boundY;
+                // }
                 console.log('check' +roundNum(event.pageX, grid) + ":" +roundNum(event.pageY, grid));
                 //no left associative assignemnt operator calls BURN IN HELL JS
                 mx = mx - rect.left;
                 mx = roundNum(mx, grid); //right now tracks are stuck at 0 left offset
-                my = my -rect.top - 10;
+                my = my - rect.top - 10; //10 just aligns the note better 
                 my = roundNum(my,grid) + 15;//y position - boundingRec top offsest - 10 (for getting into the middle of the note)
                 //set bounds for drawing window
-                if(mx < 120){
-                    mx = 120;
+                if(mx < boundX){
+                    mx = boundX;
                 }
-                if(my < 15){
-                    my = 15;
+                if(my < boundY){
+                    my = boundY;
                 }
                 console.log('check offset:' +mx + ":" +my);
                 //draw note (circle for now)
-                self.cv.ctx.beginPath();
-                self.cv.ctx.arc(mx,my,5,0,2*Math.PI);
-                self.cv.ctx.fillStyle = 'green';
-                self.cv.ctx.fill();
+                // self.cv.ctx.beginPath();
+                // self.cv.ctx.arc(mx,my,10,0,2*Math.PI);
+                self.cv.ctx.fillStyle = 'purple';
+                // self.cv.ctx.fill();
+                let s = 27;
+                self.cv.ctx.fillRect(mx-(s/2),my-(s/2),s,s);
                 //calculate note placement from mx
-                let sub = 120;       //adjustments for now
+                let sub = 90;       //adjustments for now
                 let noteX = mx - sub;
                 let noteLength = 500; //ms, change later 
                 let noteBar = 1;
-                let noteBeat = noteX/grid + 1;
-                console.log('notebeat before calc' + noteBeat)
-                if(noteBeat >= 5){
-                    noteBar = Math.floor(noteBeat/4);
+                let noteBeat = noteX/grid;
+                if(noteBeat > 4){ //past first bar
+                    noteBar = Math.floor(noteBeat/4) + 1; //<--we start at 1 not zero
+                    noteBeat = noteBeat%4;
+                    console.log('noteBeat%4 = ' + noteBeat);
                     if(noteBeat%4 === 0){
                         noteBeat = 4;
-                    }
-                    else{
-                        noteBeat = noteBeat % 4;
+                        noteBar-=1;
                     }
                 }
                 let noteTS = new timeSig(noteBeat, noteBar);

@@ -6,4 +6,9 @@
     --Track
         ---audio (not working yet) or vst track
 -fixed note position issues (added constraints and proper position based on pageX, pageY)
--
+
+8/15/18
+-Fixed timing note-to-click issue by increasing resolution of interval on scheduler
+-Got rid of Drawnote on timeline (was only for debugging)
+-Adjusted some variables that are used when drawing the canvas, this offset the timeline which will fixed later
+-Ran performance metrics and determined that workaround is needed for the propogating info bar
