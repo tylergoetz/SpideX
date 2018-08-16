@@ -9,7 +9,6 @@ document.addEventListener('keydown', (event) => {
     if(keyName === 'Control'){
         if(!cntrl){
             cntrl = true;
-            console.log(cntrl);
         }
     }
     switch(keyName){
@@ -48,7 +47,6 @@ document.addEventListener('keyup', (event)=>{
         case 'Control':
             if(cntrl){
                 cntrl = false;
-                console.log(cntrl);
             }
            
         break;

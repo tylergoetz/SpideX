@@ -10,4 +10,10 @@ function MasterTrack() {
     t.create(2);
     this.tracks.push(t);
   }
+  this.notifyResize = function(){
+    for(track in this.tracks){
+      //track.resize();
+      console.log('track resized');
+    }
+  }
 }

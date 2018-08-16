@@ -1,3 +1,4 @@
+//IMPORTANT AUDIO CONTEXT
 var audioCtx = new(window.AudioContext || window.webkitAudioContext)(); // define audio context
 audioCtx.suspend();
 //extras can delete later//////////////
@@ -35,6 +36,7 @@ metronomeToggle.onclick = function(){
 var metronomeOn = true;
 var ts = new timeSig(beat, bar);    //global timesig 
 var notes = [];                     //global notes, any notes pushed to here will be scheduled for playback!
+var scheduledNotes = [];
               
 ////////class time signature  /////
 function timeSig(beat, bar) {
@@ -69,23 +71,41 @@ function Scheduler() {
     audioCtx.resume();
     if(timerID === null)
     timerID = window.setInterval(function(){
+      //find notes for current and next beat||bar from array notes and schedule them in schedulednotes 
+      for(var i = 0; i < notes.length; i++){
+        if(scheduleNotes(new timeSig(notes[i].placement.beat, notes[i].placement.bar))&& !scheduledNotes.includes(notes[i])){
+          scheduledNotes.push(notes[i]);
+        }
+      }
       while (nextNotetime < (audioCtx.currentTime + 0.1) && self.started) {
         //can set tempo here i.e. 0.5seconds per quater note = 120bpm 
         nextNotetime += bpm;
         keepTime(nextNotetime, ts);
         controller.ui.tick();
-        for(var i = 0; i < notes.length; i++){
-          let played = playNote(nextNotetime, notes[i]);
+        for(var i = 0; i < scheduledNotes.length; i++){
+          let played = playNote(nextNotetime, scheduledNotes[i]);
+          if(scheduledNotes[i].beat === 1){
+          }
         }
         playSound(nextNotetime);
       }
+      console.log(scheduledNotes.length + ' | notes.length = ' + notes.length)
+      scheduledNotes.length = 0;  //clear scheduled notes for next beat||bar search
     }, 100);
   }
 }
 
 
+//-------------------------------------HELPER FUNCTIONS----------------------------------------------------------------------------|
+
+function scheduleNotes(timeSig){
+  let dif = 1;
+  return (Math.abs(ts.beat - timeSig.beat) <= dif && Math.abs(ts.bar - timeSig.bar) <= dif)
+}
+
+
+//SYNCS ELEMENT METRODISPLAY WITH GLOBAL TIMESIGNATURE TS
 function keepTime(time, timeSig){
-  //console.log(timeSig.beat + '/' + timeSig.bar);
   document.getElementById("metroDisplay").innerText = timeSig.beat + '/' + timeSig.bar;
   if (timeSig.beat < 4) {
     timeSig.beat++;
@@ -95,7 +115,7 @@ function keepTime(time, timeSig){
   }
 }
 
-
+//FUNCTIONS AS A PSEUDO METRONOME FOR NOW
 function playSound(time) {
   if(metronomeOn){
     let osc = audioCtx.createOscillator();
@@ -116,6 +136,10 @@ function playSound(time) {
 }
 
 //creates oscillator for scheduled note and play it, handles Note class only 
+/*TODO:
+ *  -create fx chain and vst style plugins to connect to make whatever note sound you want
+ *
+*/
 function playNote(time, Note) {
   let notePlayed = false;
   let osc = audioCtx.createOscillator();
@@ -124,6 +148,7 @@ function playNote(time, Note) {
   gainNode.connect(compressor);
   gainNode.gain.value = 0.2;
   if (ts.bar === Note.placement.bar && ts.beat === Note.placement.beat) {
+    console.log(Note);
     osc.frequency.value = Note.value;
     osc.start(time);
     gainNode.gain.setTargetAtTime(0, time + Note.length, 0.25);
@@ -135,8 +160,7 @@ function playNote(time, Note) {
 };
 
 function restartPlayback(){
-  controller.scheduler.stop();
-  ts.beat = 1;
+  controller.pause();
+  ts.beat = 1;  //set global ts back to 1:1 i.e. start of song
   ts.bar = 1;
-  controller.scheduler.start();
 }

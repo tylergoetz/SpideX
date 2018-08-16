@@ -6,7 +6,7 @@ class Track{
         this.map = createArray(10,10);
         this.grid = 30;
         this.cv;
-        this.notes = ['c', 'c#','d','d#','e','f','f#','g','g#','a','a#','b'];
+        this.noteName = ['c', 'c#','d','d#','e','f','f#','g','g#','a','a#','b'];
         this.length = 100;
         this.height = 12;
     }
@@ -37,11 +37,11 @@ class Track{
             var rect = this.cv.getBoundingClientRect();
             console.log(rect.top, rect.right, rect.bottom, rect.left);
             let self  = this;
-            for(let i = 0; i < this.notes.length; i++){  
+            for(let i = 0; i < this.noteName.length; i++){  
                 let key, col;
                 key = new Image();
                 key.className = 'wk';
-                if(this.notes[i].includes('#')){
+                if(this.noteName[i].includes('#')){
                     //key.src = 'w_keyblack.png';
                     col = 'black';
                 }
@@ -55,7 +55,7 @@ class Track{
                 self.cv.ctx.fillStyle = col;
                 self.cv.ctx.fillRect(0, grid*i, grid*3, grid);
                 self.cv.ctx.fillStyle = 'gray';
-                self.cv.ctx.fillText(self.notes[i], 2, grid*i+15, 50);
+                self.cv.ctx.fillText(self.noteName[i], 2, grid*i+15, 50);
                 self.cv.ctx.strokeStyle = 'black';
                 self.cv.ctx.strokeRect(0, grid*i, l*50, grid);
                 //}
@@ -73,13 +73,6 @@ class Track{
                 boundY = 15;    //Y-bounds to keep notes in piano roll, aligned with note
                 mx = event.pageX;
                 my = event.pageY;
-                // if(mx < boundX){
-                //     mx = boundX;
-                // }
-                // if(my < boundY){
-                //     my = boundY;
-                // }
-                console.log('check' +roundNum(event.pageX, grid) + ":" +roundNum(event.pageY, grid));
                 //no left associative assignemnt operator calls BURN IN HELL JS
                 mx = mx - rect.left;
                 mx = roundNum(mx, grid); //right now tracks are stuck at 0 left offset
@@ -96,10 +89,12 @@ class Track{
                 //draw note (circle for now)
                 // self.cv.ctx.beginPath();
                 // self.cv.ctx.arc(mx,my,10,0,2*Math.PI);
-                self.cv.ctx.fillStyle = 'purple';
+                self.cv.ctx.fillStyle = 'red';
                 // self.cv.ctx.fill();
                 let s = 27;
                 self.cv.ctx.fillRect(mx-(s/2),my-(s/2),s,s);
+                console.log('mx:' + mx + ' |s/2:' + (s/2) + ' |my:' + my);
+                let c = new Coord(mx-(s/2), my-(s/2), mx+(s/2),my+(s/2));
                 //calculate note placement from mx
                 let sub = 90;       //adjustments for now
                 let noteX = mx - sub;
@@ -109,21 +104,53 @@ class Track{
                 if(noteBeat > 4){ //past first bar
                     noteBar = Math.floor(noteBeat/4) + 1; //<--we start at 1 not zero
                     noteBeat = noteBeat%4;
-                    console.log('noteBeat%4 = ' + noteBeat);
                     if(noteBeat%4 === 0){
                         noteBeat = 4;
-                        noteBar-=1;
+                        noteBar-=1; //past first bar so take away the one from earlier
                     }
                 }
                 let noteTS = new timeSig(noteBeat, noteBar);
 
                 //calulate note number from my and canvas offset.top // +-30 so grid
-                let noteNumber = (my - 15)/30;
+                let noteNumber = (my - 15)/grid;
                 noteNumber = 60-noteNumber;
-                let note = new Note(noteLength, noteTS, noteNumber);
+                let note = new Note(noteLength, noteTS, noteNumber, c);
                 notes.push(note);
                 console.log('beat: ' +noteBeat + " | bar: " + noteBar) ;
             },false);
+
+            this.cv.addEventListener('mousemove', function(){
+                let mx, my;
+                let s = self;
+                mx = event.pageX;
+                my = event.pageY;
+                //console.log('check' +roundNum(event.pageX, grid) + ":" +roundNum(event.pageY, grid));
+                //no left associative assignemnt operator calls BURN IN HELL JS
+                mx = mx - rect.left;
+                mx = roundNum(mx, grid); //right now tracks are stuck at 0 left offset
+                my = my - rect.top - 10; //10 just aligns the note better 
+                my = roundNum(my,grid) + 15;
+
+                //console.log(notes);
+
+                for(let i = 0; i < notes.length; i++){
+                    //console.log(self.notes[i]);
+                    //console.log(mx - notes[i].coord.y1);
+                    console.log('mx:' + mx + " |my:" + my + ' |x1:' + notes[0].coord.x1 + ' |y1:' + notes[0].coord.y1);
+                    if((Math.abs(mx - notes[i].coord.x1) <= grid/2) && (Math.abs(my - notes[i].coord.y1) <= grid/2)){
+                        console.log('note found!')
+                        this.style.cursor = 'e-resize';
+
+                    }
+                    else if(this.style.cursor != 'auto'){
+                        this.style.cursor = 'auto';
+
+                    }
+                }
+                
+                
+            },false);
+
         }
         
         

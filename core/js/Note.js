@@ -4,5 +4,5 @@ function Note(length, timeSig, value, coord){
     this.value = Math.pow(2, ((value-69)/12)) * 440;    //note frequency in hertz
     //console.log(this);
 
-    this.coor = coord;  //placment on UI for eventlistener triggers
+    this.coord = coord;  //placment on UI for eventlistener triggers
 }

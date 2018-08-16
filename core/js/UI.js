@@ -56,9 +56,9 @@ function UI() {
   this.drawTimeline();  //either i'm stupid or JS is but this seemed like the only way handle constructor calls (maybe es6 class constructors?)
   
   //helps with drawing functions 
-  let t = 0; 
+  this.t = 0; 
   this.tick = function(){
-    t++;
+    this.t++;
   }
   
   this.draw = function(canvasId, n){
@@ -79,17 +79,17 @@ function UI() {
   //display info in the infobar kind of like fl studio
   //PERFORMANCE ISSUES FIND WORKAROUND  
 
-  // document.body.addEventListener('mouseover', function(event){
-  //   let target = $(event.target);
-  //   let elId = target.attr('alt');
-  //   let el = document.getElementById('infoDisplay');
-  //   if(elId){
-  //     el.innerHTML = elId;
-  //   }
-  //   else{
-  //     el.innerHTML = "---";
-  //   }
-  // },false);
+  document.body.addEventListener('mouseover', function(event){
+    let target = $(event.target);
+    let elId = target.attr('alt');
+    let el = document.getElementById('infoDisplay');
+    if(elId){
+      el.innerHTML = elId;
+    }
+    else{
+      el.innerHTML = "---";
+    }
+  },false);
 }
 
 //rounds a number up or down depending on where it sits between the interval
@@ -155,18 +155,18 @@ function dropFileDown() {
 }
 // Close the dropdown if the user clicks outside of it
 window.onclick = function(e) {
-if (!e.target.matches('.dropbtn')) {
-  var myDropdown = document.getElementById("myDropdown");
-    if (myDropdown.classList.contains('show')) {
-      myDropdown.classList.remove('show');
-    }
-}
-if (!e.target.matches('.dropbtn')) {
-  var myDropdown = document.getElementById("fileDropdown");
-    if (myDropdown.classList.contains('show')) {
-      myDropdown.classList.remove('show');
-    }
-}
+  if (!e.target.matches('.dropbtn')) {
+    var myDropdown = document.getElementById("myDropdown");
+      if (myDropdown.classList.contains('show')) {
+        myDropdown.classList.remove('show');
+      }
+  }
+  if (!e.target.matches('.dropbtn')) {
+    var myDropdown = document.getElementById("fileDropdown");
+      if (myDropdown.classList.contains('show')) {
+        myDropdown.classList.remove('show');
+      }
+  }
 }
 
 
