@@ -12,3 +12,8 @@
 -Got rid of Drawnote on timeline (was only for debugging)
 -Adjusted some variables that are used when drawing the canvas, this offset the timeline which will fixed later
 -Ran performance metrics and determined that workaround is needed for the propogating info bar
+
+8/16/18
+-Partial optimizd scheduler (note playback) by adding lookahead buffer to only scheudle notes when they are within a threshold of distance from the current song position (global ts)
+-Started work on UI note resizing, deleting, overall manipulation
+-Fixed issue found when resizing-scaling window with new tracks
