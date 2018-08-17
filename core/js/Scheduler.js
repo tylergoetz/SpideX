@@ -36,7 +36,7 @@ metronomeToggle.onclick = function(){
 var metronomeOn = true;
 var ts = new timeSig(beat, bar);    //global timesig 
 var notes = [];                     //global notes, any notes pushed to here will be scheduled for playback!
-var scheduledNotes = [];
+var scheduledNotes = [];            //global notes that are scheduled to be played based on buffer (dif);
               
 ////////class time signature  /////
 function timeSig(beat, bar) {

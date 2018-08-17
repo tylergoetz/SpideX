@@ -77,7 +77,7 @@ function UI() {
     }
   }
   //display info in the infobar kind of like fl studio
-  //PERFORMANCE ISSUES FIND WORKAROUND  
+  //POSSIBLE PERFORMANCE ISSUES FIND WORKAROUND  
 
   document.body.addEventListener('mouseover', function(event){
     let target = $(event.target);
@@ -153,6 +153,9 @@ function dropDown() {
 function dropFileDown() {
   document.getElementById("fileDropdown").classList.toggle("show");
 }
+function dropNoteOptions(){
+  document.getElementById("noteOptions").classList.toggle("show");
+}
 // Close the dropdown if the user clicks outside of it
 window.onclick = function(e) {
   if (!e.target.matches('.dropbtn')) {
@@ -166,6 +169,19 @@ window.onclick = function(e) {
       if (myDropdown.classList.contains('show')) {
         myDropdown.classList.remove('show');
       }
+  }
+  if (!e.target.matches('.dropbtn')) {
+    try{
+      var myDropdown = document.getElementById("noteOptions");
+      if (myDropdown.classList.contains('show')) {
+        myDropdown.classList.remove('show');
+        myDropdown.parentNode.removeChild(myDropdown);
+      }
+    }
+    catch(error){
+      //console.log('no noteOptions available yet');
+    }
+    
   }
 }
 

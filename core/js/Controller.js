@@ -14,12 +14,14 @@ function Controller() {
   this.pause = function(){self.scheduler.stop();}
 
   this.controls = new Controls();
-}
+} 
 var controller = new Controller();
 window.onresize = function(ev){
   controller.mt.notifyResize();
 }
 
-document.body.addEventListener('click', function(event){
-  console.log(event.pageX + ' : ' + event.pageY);
-},false);
+
+// helps find where mouse clicks are pixel-wise
+// document.body.addEventListener('click', function(event){
+//   console.log(event.pageX + ' : ' + event.pageY);
+// },false);
