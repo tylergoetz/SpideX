@@ -11,7 +11,7 @@ compressor.release.setValueAtTime(0.25, audioCtx.currentTime);
 compressor.connect(audioCtx.destination);
 //////////////////////////////////////
 
-var beat = 1;
+var beat = 0;
 var bar = 1;
 var play = document.getElementById("play"); //play button
 play.onclick = function(){
@@ -161,6 +161,6 @@ function playNote(time, Note) {
 
 function restartPlayback(){
   controller.pause();
-  ts.beat = 1;  //set global ts back to 1:1 i.e. start of song
+  ts.beat = 0;  //set global ts back to 1:1 i.e. start of song
   ts.bar = 1;
 }

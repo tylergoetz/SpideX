@@ -10,6 +10,8 @@ function MasterTrack() {
     t.create(2);
     this.tracks.push(t);
   }
+
+  //if track's are resized they need to be re-drawn
   this.notifyResize = function(){
     for(track in this.tracks){
       //track.resize();

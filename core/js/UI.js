@@ -7,6 +7,7 @@ var timelineOffset = 100;
 var grid = 30;
 var length = 20;
 var height = 24;
+var pOffset = grid*10;  //piano roll offset (from track class)
 
 
 function UI() {
@@ -18,8 +19,13 @@ function UI() {
     }
   });
   
+  this.createWindow = function(){
+    //create a windows for plug-ins to sit in when called from the track
+    //all jst's must contain: drawUI | outputNode
+  }
+
   this.drawTimeline = function(){
-    canvas.style.left = grid*3 +'px'; //set timeline position
+    canvas.style.left = pOffset + grid*3 +'px'; //set timeline position
     
     let c = 1;
     let d = 1;
@@ -37,9 +43,10 @@ function UI() {
     canvas.addEventListener('click',function(){
       let mx = roundNum(event.pageX, grid);
       ctx.beginPath();
-      ctx.moveTo(mx-timelineOffset, 0);
-      ctx.lineTo(mx-timelineOffset,50);
+      ctx.moveTo(mx-pOffset-(grid*3), 0);
+      ctx.lineTo(mx-pOffset-(grid*3),50);
       ctx.stroke();
+      //line for tracks
       for(let i = 0; i < controller.mt.tracks.length; i++){
         let track = controller.mt.tracks[i];
         let trackCtx = track.cv.ctx;
@@ -54,7 +61,6 @@ function UI() {
     }, false);
   }
   this.drawTimeline();  //either i'm stupid or JS is but this seemed like the only way handle constructor calls (maybe es6 class constructors?)
-  
   //helps with drawing functions 
   this.t = 0; 
   this.tick = function(){
