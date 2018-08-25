@@ -19,7 +19,6 @@ var controller = new Controller();
 window.onresize = function(ev){
   controller.mt.notifyResize();
 }
-let osc = new Oscillator();
 
 // helps find where mouse clicks are pixel-wise
 // document.body.addEventListener('click', function(event){

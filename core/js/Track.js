@@ -17,6 +17,7 @@ class Track{
         this.onNote = false;
         this.offset = 0;
         this.contextMenuButtonHeight = 48 + 'px';
+        this.onNoteInfo;
     }
     //Might not be necessary in since tracks arent responsible for playback
     play (){
@@ -27,6 +28,7 @@ class Track{
     }
     create(type){   //1 for audio track, 2 for vst
         //table for canvas and control display
+        let self        = this;
         let table = document.createElement('table');
         table.style.cellPadding = '0px';
         let tr = document.createElement('tr');
@@ -45,14 +47,26 @@ class Track{
         cntrl.innerHTML     = 'stuff here to fill space?'
             //cntrl content//
             let cntrlElements = [];
-            let cntrlVolume = document.createElement('div');
+            let cntrlVolume = document.createElement('input');
             cntrlElements.push(cntrlVolume);
             cntrlVolume.style.display = 'inline-block';
             cntrlVolume.style.width = grid * 3 //grid total is 10 so 7 left
+            cntrlVolume.innerText = 'volume';
+            
             
             let cntrlPlugins = document.createElement('div');
             cntrlElements.push(cntrlPlugins);
             cntrlPlugins.style.display = 'inline-block';
+            cntrlPlugins.style.position = 'relative';
+            cntrlPlugins.style.float = 'right';
+            cntrlPlugins.style.width = grid*3 + 'px';
+            cntrlPlugins.style.height = grid*10 + 'px';
+            cntrlPlugins.style.backgroundColor = '#444';
+            cntrlPlugins.onclick = function(ev){
+                console.log('cntrlPlugins clicked!');
+            }
+            
+            
 
 
 
@@ -84,12 +98,28 @@ class Track{
         table.appendChild(tdcv);
         tdcv.appendChild(this.cv);
 
+        //now that track elements have been made create add plugin and controls to left-side of track
+        //for(let i = 0; i < 5; i++){
+            let div = document.createElement('div');
+            div.innerText = 'plugin: ';
+            div.style.userSelect = 'none';
+            div.style.borderStyle = 'solid';
+            div.style.borderColor = 'black';
+            div.style.backgroundColor = 'white';
+            div.style.color = 'black';
+            let pluginOsc = new Oscillator(self);//pass parentNode (track) for location tracking 
+            div.onclick = function(){
+                pluginOsc.drawUI();  
+            };
+            cntrlPlugins.appendChild(div);
+        //}
+
         if(type === 1){ //audio track
             //smart kid stuff here
         }
         else if(type === 2){    //virtual inst track UI
             let rect        = this.cv.getBoundingClientRect();
-            let self        = this;
+            
             console.log(rect.top, rect.right, rect.bottom, rect.left);
             for(let i = 0; i < this.noteName.length; i++){  
                 let key, col;
@@ -149,7 +179,7 @@ class Track{
                 let s       = 27;
                 self.cv.ctx.fillRect(mx-(s/2),my-(s/2),s,s);
                 // console.log('mx:' + mx + ' |s/2:' + (s/2) + ' |my:' + my);
-                let c       = new Coord(mx-(s/2), my-(s/2), mx+(s/2),my+(s/2));
+                let coord       = new Coord(mx-(s/2), my-(s/2), mx+(s/2),my+(s/2));
                 //calculate note placement from mx
                 let sub     = 90;       //adjustments for now
                 let noteX   = mx - sub - self.offset; //sub offset to account for adding offset to starting draw pos on canvas
@@ -170,7 +200,7 @@ class Track{
                 //calulate note number from my and canvas offset.top // +-30 so grid
                 let noteNumber  = (my - 15)/grid;
                 noteNumber      = 60-noteNumber;
-                let note        = new Note(noteLength, noteTS, noteNumber, c);
+                let note        = new Note(noteLength, noteTS, noteNumber, coord);
                 notes.push(note);
                 self.onNote     = true;
                 console.log('beat: ' +noteBeat + " | bar: " + noteBar) ;
@@ -188,6 +218,7 @@ class Track{
                     //console.log('mx:' + mx + " |my:" + my + ' |x1:' + notes[0].coord.x1 + ' |y1:' + notes[0].coord.y1);
                     if((Math.abs(mx - notes[i].coord.x1) <= grid/2) && (Math.abs(my - notes[i].coord.y1) <= grid/2)){
                         this.style.cursor = 'e-resize';
+                        self.onNoteInfo = notes[i];
                         self.onNote = true;
                         return;     //sorry OOP but otherwise logic is fookin annoying, early return to commit to onNote and not fire false for others
                     }
@@ -233,7 +264,6 @@ class Track{
                         option.innerText = self.trackOptions[t];
                         
                         contextMenu.appendChild(option);
-                        console.log(option.parentNode.style.width);
                         option.style.width = option.parentNode.style.width;
                         option.style.paddingLeft = '0px';
                         option.style.textAlign='center';
@@ -242,8 +272,9 @@ class Track{
                         if(short === 'remove note'){
                             option.onclick = function(){
                                 console.log(option.innerText);
-                                let mousePos = trackMouse(self.cv);
-                                //cv.fillRect(self)
+                                remove(notes, self.onNoteInfo.coord);
+                                self.cv.ctx.fillStyle = '#444';
+                                self.cv.ctx.fillRect(self.onNoteInfo.coord.x1-.75, self.onNoteInfo.coord.y1-.75, grid-1.25, grid-1.75);
                             }
                         }
                         else if(short === 'copy note'){
@@ -280,4 +311,12 @@ function trackMouse(canvasElement){
       mx : mx,
       my : my 
     };
+}
+
+function remove(array, element) {
+    console.log('removing');
+    console.log(element);
+    const index = array.indexOf(element);
+    array.splice(index, 1);
+    
 }
