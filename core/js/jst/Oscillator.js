@@ -13,8 +13,9 @@ class Oscillator{
 
     }
     drawUI(){
+        let self = this;
         if(this.ui === null){
-            let self = this;
+            
             let canvasW = this.canvasW;
             let canvasH = this.canvasH;
 
@@ -77,6 +78,8 @@ class Oscillator{
                 moving = true;
                 console.log('entering moving');
             }
+
+            //place div where mouse lands (click and drag effect)
             document.addEventListener('mouseup', function(ev){
                 console.log('mouseup');
                 if(moving){
@@ -109,8 +112,8 @@ class Oscillator{
             
         }
         else{
-            this.ui.style.left = window.pageXOffset + 'px';
-            this.ui.style.top = window.pageYOffset +'px'; 
+            this.ui.style.left = event.pageX + self.canvasW + 'px';
+            this.ui.style.top = event.pageY +'px'; 
         }
     }
 }

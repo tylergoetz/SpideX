@@ -170,15 +170,13 @@ class Track{
                 if(my < boundY){
                     my      = boundY;
                 }
-                // console.log('check offset:' +mx + ":" +my);
                 //draw note (circle for now)
                 // self.cv.ctx.beginPath();
                 // self.cv.ctx.arc(mx,my,10,0,2*Math.PI);
-                self.cv.ctx.fillStyle = 'red';
                 // self.cv.ctx.fill();
+                self.cv.ctx.fillStyle = 'red';
                 let s       = 27;
                 self.cv.ctx.fillRect(mx-(s/2),my-(s/2),s,s);
-                // console.log('mx:' + mx + ' |s/2:' + (s/2) + ' |my:' + my);
                 let coord       = new Coord(mx-(s/2), my-(s/2), mx+(s/2),my+(s/2));
                 //calculate note placement from mx
                 let sub     = 90;       //adjustments for now
@@ -196,7 +194,6 @@ class Track{
                     }
                 }
                 let noteTS = new timeSig(noteBeat, noteBar);
-
                 //calulate note number from my and canvas offset.top // +-30 so grid
                 let noteNumber  = (my - 15)/grid;
                 noteNumber      = 60-noteNumber;
@@ -205,6 +202,8 @@ class Track{
                 self.onNote     = true;
                 console.log('beat: ' +noteBeat + " | bar: " + noteBar) ;
             },false);
+
+            //check if users mouse is over a note
             this.cv.addEventListener('mousemove', function(ev){
                 let mx, my;
                 mx = event.pageX;

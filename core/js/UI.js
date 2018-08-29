@@ -25,7 +25,7 @@ function UI() {
   }
 
   this.drawTimeline = function(){
-    canvas.style.left = pOffset + grid*3 +'px'; //set timeline position
+    canvas.style.left = pOffset + grid*3.25 +'px'; //set timeline position
     
     let c = 1;
     let d = 1;
@@ -48,12 +48,13 @@ function UI() {
       ctx.stroke();
       //line for tracks
       for(let i = 0; i < controller.mt.tracks.length; i++){
+        let g = grid*10;
         let track = controller.mt.tracks[i];
         let trackCtx = track.cv.ctx;
         trackCtx.strokeStyle = "#FF0000";
         trackCtx.beginPath();
-        trackCtx.moveTo(mx, 0);
-        trackCtx.lineTo(mx, track.height*track.grid);
+        trackCtx.moveTo(mx-g, 0);
+        trackCtx.lineTo(mx-g, track.height*track.grid);
         trackCtx.stroke();
       }
       //set ts to timeline position
