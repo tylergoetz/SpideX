@@ -1,6 +1,6 @@
 # SpideX
 Online DAW
-## Objectives
+## Objectives/Goals
 - Online
 - Collaborative
 - User-friendly
